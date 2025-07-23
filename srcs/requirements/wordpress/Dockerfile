@@ -6,15 +6,16 @@
 #    By: angerard <angerard@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/23 12:21:48 by angerard          #+#    #+#              #
-#    Updated: 2025/07/23 12:43:25 by angerard         ###   ########.fr        #
+#    Updated: 2025/07/23 17:31:59 by angerard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 FROM debian:buster
 
-RUN apt update -y
-
-RUN apt install -y php-fpm php-mysql curl
+RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /etc/apt/sources.list \
+    && sed -i 's|http://security.debian.org/debian-security|http://archive.debian.org/debian-security|g' /etc/apt/sources.list \
+    && apt update -y \
+    && apt install -y php-fpm php-mysql curl
 
 COPY ./tools/init.sh /
 COPY ./tools/wp-config.php /
