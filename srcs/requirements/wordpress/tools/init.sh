@@ -18,7 +18,7 @@ wp core download --allow-root
 mv /wp-config.php /var/www/html/wp-config.php
 
 # Lire secrets
-cred_file="/secrets/credentials.txt"
+cred_file="/secrets/wp_credentials.txt"
 db_name_file="/secrets/db_name.txt"
 db_user_file="/secrets/db_user.txt"
 db_pwd_file="/secrets/db_password.txt"
