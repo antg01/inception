@@ -6,7 +6,7 @@
 #    By: angerard <angerard@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/23 12:21:48 by angerard          #+#    #+#              #
-#    Updated: 2025/07/23 17:31:59 by angerard         ###   ########.fr        #
+#    Updated: 2025/07/23 17:38:41 by angerard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /
 
 COPY ./tools/init.sh /
 COPY ./tools/wp-config.php /
+RUN chmod +x /init.sh
 
 VOLUME /secrets
 

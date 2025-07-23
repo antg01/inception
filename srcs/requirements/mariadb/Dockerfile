@@ -6,7 +6,7 @@
 #    By: angerard <angerard@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/23 12:18:37 by angerard          #+#    #+#              #
-#    Updated: 2025/07/23 17:29:07 by angerard         ###   ########.fr        #
+#    Updated: 2025/07/23 17:38:20 by angerard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /
 
 COPY ./tools/maria-server.conf /etc/mysql/mariadb.conf.d/
 COPY ./tools/init.sh /
+RUN chmod +x /init.sh
 
 VOLUME /secrets
 
