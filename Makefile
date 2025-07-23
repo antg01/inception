@@ -6,20 +6,26 @@
 #    By: angerard <angerard@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/23 12:14:52 by angerard          #+#    #+#              #
-#    Updated: 2025/07/23 17:07:32 by angerard         ###   ########.fr        #
+#    Updated: 2025/07/23 17:53:18 by angerard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Chemin vers docker-compose
 COMPOSE=docker-compose -f ./srcs/docker-compose.yml
 
+# Correction des fins de ligne pour éviter les erreurs d'exécution
+fix-permissions:
+	@dos2unix srcs/requirements/nginx/tools/init.sh
+	@dos2unix srcs/requirements/mariadb/tools/init.sh
+	@dos2unix srcs/requirements/wordpress/tools/init.sh
+
 # Création automatique des volumes requis
 setup:
-	@mkdir -p /home/angerard/data/wordpress
-	@mkdir -p /home/angerard/data/mariadb
+	@mkdir -p $(HOME)/data/wordpress
+	@mkdir -p $(HOME)/data/mariadb
 
-# Cibles principales
-all: setup
+# Build et lancement
+all: fix-permissions setup
 	@$(COMPOSE) up -d --build
 
 up:
@@ -56,4 +62,3 @@ ps:
 
 logs:
 	@$(COMPOSE) logs -f
-
