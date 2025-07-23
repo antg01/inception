@@ -6,15 +6,20 @@
 #    By: angerard <angerard@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/23 12:14:52 by angerard          #+#    #+#              #
-#    Updated: 2025/07/23 12:34:04 by angerard         ###   ########.fr        #
+#    Updated: 2025/07/23 17:07:32 by angerard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Chemin vers docker-compose
 COMPOSE=docker-compose -f ./srcs/docker-compose.yml
 
+# Création automatique des volumes requis
+setup:
+	@mkdir -p /home/angerard/data/wordpress
+	@mkdir -p /home/angerard/data/mariadb
+
 # Cibles principales
-all:
+all: setup
 	@$(COMPOSE) up -d --build
 
 up:
@@ -51,3 +56,4 @@ ps:
 
 logs:
 	@$(COMPOSE) logs -f
+
