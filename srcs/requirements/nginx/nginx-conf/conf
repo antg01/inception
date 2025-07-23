@@ -6,7 +6,7 @@
 #    By: angerard <angerard@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/23 12:21:13 by angerard          #+#    #+#              #
-#    Updated: 2025/07/23 12:21:15 by angerard         ###   ########.fr        #
+#    Updated: 2025/07/23 12:42:02 by angerard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ server {
     listen 443 ssl;
     listen [::]:443 ssl;
 
-    server_name www.sahafid.1337.ma sahafid.1337.ma;
+    server_name www.angerard.42.fr angerard.42.fr;
 
     ssl_certificate here_certs;
     ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
