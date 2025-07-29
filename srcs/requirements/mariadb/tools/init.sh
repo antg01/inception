@@ -9,8 +9,9 @@ DB_NAME=$(cat /secrets/db_name.txt)
 DB_USER=$(cat /secrets/db_user.txt)
 
 # Démarrer MariaDB temporairement
-mysqld_safe --skip-networking &
-sleep 5
+until mysqladmin ping --silent; do
+    sleep 1
+done
 
 # Créer base et utilisateur
 mysql -u root <<EOF
