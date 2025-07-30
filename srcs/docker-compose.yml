@@ -60,7 +60,11 @@ services:
       - ../secrets:/secrets:ro
     env_file:
       - .env
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PWD}
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PWD}
     networks:
       - inception
     restart: always
-

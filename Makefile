@@ -62,3 +62,13 @@ ps:
 
 logs:
 	@$(COMPOSE) logs -f
+
+purge-db:
+	sudo rm -rf $(HOME)/data/mariadb/*
+	sudo chown -R 999:999 $(HOME)/data/mariadb || true
+
+reset-db:
+	@echo "Stopping containers and removing database volume..."
+	@docker compose down -v
+	@docker volume rm mariadb || true
+	@echo "✅ MariaDB volume reset. You can now run 'make all'"
