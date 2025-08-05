@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Lire domaine et chemin des certificats
+# Lire domaine depuis les secrets
 domain_name_file="/secrets/domain.txt"
 cert_path="/etc/ssl/certs/nginx-selfsigned.crt"
 key_path="/etc/ssl/private/nginx-selfsigned.key"
@@ -16,7 +16,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -out "$cert_path" \
     -subj "/C=BE/L=Brussels/O=42/OU=Students/CN=$DOMAIN_NAME"
 
-# Créer fichier de conf nginx dynamique
+# Créer la configuration NGINX
 echo "server {
     listen 443 ssl;
     listen [::]:443 ssl;
@@ -34,12 +34,26 @@ echo "server {
         try_files \$uri \$uri/ /index.php?\$args;
     }
 
-    location ~ \.php\$ {
-        try_files \$uri =404;
+    location ~ \.php$ {
+        include fastcgi_params;
         fastcgi_pass wordpress:9000;
-        include fastcgi.conf;
+        #fastcgi_param SCRIPT_FILENAME /var/www/html$fastcgi_script_name;
+        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+        fastcgi_index index.php;
     }
-}" > /etc/nginx/sites-available/default
+}
 
-# Démarrer nginx (PID 1)
+# Redirection HTTP -> HTTPS
+server {
+    listen 80;
+    listen [::]:80;
+    server_name $DOMAIN_NAME;
+
+    return 301 https://\$host\$request_uri;
+}
+" > /etc/nginx/sites-available/default
+
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+
+# Démarrer NGINX au premier plan
 exec nginx -g "daemon off;"

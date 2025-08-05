@@ -1,47 +1,43 @@
 #!/bin/sh
 set -ex
 
-# Load secrets
-db_name_file=/secrets/db_name.txt
-db_user_file=/secrets/db_user.txt
-db_pwd_file=/secrets/db_password.txt
-db_root_pwd_file=/secrets/db_root_password.txt
+# Lire les secrets
+DB_NAME=$(cat /secrets/db_name.txt)
+DB_USER=$(cat /secrets/db_user.txt)
+USER_PWD=$(cat /secrets/db_password.txt)
+ROOT_PWD=$(cat /secrets/db_root_password.txt)
 
-if [ -f "$db_name_file" ]
+# Initialiser la DB si vide
+if [ ! -d "/var/lib/mysql/mysql" ]
 then
-    DB_NAME=$(cat "$db_name_file")
+    echo "Initialisation de la base MariaDB..."
+    mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
 fi
 
-if [ -f "$db_user_file" ]
-then
-    DB_USER=$(cat "$db_user_file")
-fi
+# Démarrer MariaDB (en avant-plan, PID 1)
+exec mysqld_safe --datadir=/var/lib/mysql \
+    --skip-networking=0 \
+    --bind-address=0.0.0.0 \
+    --skip-name-resolve \
+    --log-error=/var/log/mysql/error.log \
+    --pid-file=/run/mysqld/mysqld.pid \
+    --socket=/run/mysqld/mysqld.sock &
 
-if [ -f "$db_pwd_file" ]
-then
-    USER_PWD=$(cat "$db_pwd_file")
-fi
-
-if [ -f "$db_root_pwd_file" ]
-then
-    ROOT_PWD=$(cat "$db_root_pwd_file")
-fi
-
-# Start MariaDB in background
-mysqld_safe --datadir=/var/lib/mysql &
-
-# Wait until DB is ready
-while ! mysqladmin ping --silent --password="$ROOT_PWD" --user=root; do
-    sleep 1
+# Attendre que MariaDB réponde
+until mysqladmin ping --silent --password="$ROOT_PWD" --user=root
+do
+    echo "⏳ Attente de MariaDB..."
+    sleep 2
 done
 
-# Create database and user
+# Configurer la base
 mysql -u root -p"$ROOT_PWD" <<EOF
+ALTER USER 'root'@'localhost' IDENTIFIED BY '$ROOT_PWD';
 CREATE DATABASE IF NOT EXISTS $DB_NAME;
 CREATE USER IF NOT EXISTS '$DB_USER'@'%' IDENTIFIED BY '$USER_PWD';
 GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%';
 FLUSH PRIVILEGES;
 EOF
 
-# Keep MariaDB running
+# Garder le conteneur actif
 wait
