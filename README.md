@@ -179,7 +179,7 @@ docker volume inspect mariadb
 
 Connecte-toi à MariaDB dans le container :
 > docker exec -it mariadb mysql -u root -p
-# mot de passe : root_mariadb@pwd!
+psw : root_mariadb@pwd!
 
 SHOW DATABASES;
 USE my_inception_db;
