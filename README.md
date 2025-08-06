@@ -167,5 +167,27 @@ docker run -v db-data:/var/lib/mysql mysql
 * [WP-CLI – Official Docs](https://developer.wordpress.org/cli/commands/core/)
 
 ---
+---
+Vérifie le protocole TLS en lançant :
+> openssl s_client -connect angerard.42.fr:443 -tls1_3 </dev/null 2>/dev/null | grep -i protocol
 
-This README gives a simplified, clear picture of how and why Docker is used in the Inception project. Let me know if you want a visual diagram or example Compose file.
+Liste les volumes :
+> docker volume ls
+
+docker volume inspect wordpress
+docker volume inspect mariadb
+
+Connecte-toi à MariaDB dans le container :
+> docker exec -it mariadb mysql -u root -p
+# mot de passe : root_mariadb@pwd!
+
+SHOW DATABASES;
+USE my_inception_db;
+SHOW TABLES;
+
+Lister les réseaux Docker :
+> docker network ls
+
+vérifier l’appartenance des containers :
+> docker network inspect inception | grep Name
+---
